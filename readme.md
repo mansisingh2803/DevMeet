@@ -43,3 +43,11 @@ Lec 11
 - Explore tinder APIs
 - Create a list of all API you can think of in Dev Tinder
 - Group multiple routes under respective routers
+- Read documentation for express.Router
+- Create routes folder for managing auth, profile, request, connection
+- Create authRouter, profileRouter, requestRouter
+- Import these routers in app.js
+- Create POST/logout API
+- Create PATCH/profile.edit
+- Create PATCH/profile/password API ==> forgot password API
+- Make you validate all data in every POST, PATCH APIs

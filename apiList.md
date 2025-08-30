@@ -7,7 +7,7 @@ authRouter
 profileRouter
 - PATCH /profile/view
 - GET /profile/edit
-- PATCH /profile/password
+- PATCH /profile/password -- // forget password API
 
 connectionRequestRouter
 - POST /request/send/interested/:userId
