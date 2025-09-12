@@ -51,3 +51,17 @@ Lec 11
 - Create PATCH/profile.edit
 - Create PATCH/profile/password API ==> forgot password API
 - Make you validate all data in every POST, PATCH APIs
+
+Lec 12
+- store the connectionrequest in database
+- Create a connectionrequestschema
+- send connection request api
+- proper validation of data
+- think of all corner cases
+- $or query read about it
+- read more about indexes in MongoDb
+- Why do we need index in DB?
+- What is the advantage and disadvantages of creating indexes?
+
+Lec 13
+- 
