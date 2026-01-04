@@ -1,4 +1,5 @@
 const express = require('express');
+const validator = require("validator");
 const {validateSignUpDate}  = require("../utils/validation");
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
@@ -20,16 +21,24 @@ console.log(passwordHash);
    const user = new User({firstName, lastName, emailId, password: passwordHash,});
 
 
-        await user.save();
-    res.send("User added successfully");}
-    catch(err){
-        res.status(400).send("Error saving the use:" + err.message);
-    }
-})
-
+    const savedUser = await user.save();
+    const token = await savedUser.getJWT();
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 8 * 3600000),
+    });
+    res
+      .status(200)
+      .json({ message: "User added successfully", data: savedUser });
+  } catch (err) {
+    res.status(400).send("ERROR:" + err.message);
+  }
+});
 authRouter.post("/login", async (req, res) =>{
     try{
         const {emailId, password} = req.body;
+        if (!validator.isEmail(emailId)) {
+      throw new Error("Invalid Email");
+    }
         const user = await User.findOne({emailId: emailId});
         if(!user){
             throw new Error("INVALID Credentials");
@@ -40,9 +49,11 @@ authRouter.post("/login", async (req, res) =>{
         const token = await user.getJWT();
 
         //Add the token to cookie and send the response back to the user
-        res.cookie("token", token, { httpOnly: true });
+        res.cookie("token", token, { 
+           expires: new Date(Date.now() + 8 * 3600000),
+        });
     
-            res.send("Login Successfully!!!");
+            res.status(200).json({ user });
         
         }
         else{

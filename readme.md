@@ -64,4 +64,18 @@ Lec 12
 - What is the advantage and disadvantages of creating indexes?
 
 Lec 13
-- 
+- Write code with proper alidation for POST /request/review/:status/requestId
+- Thought process - POST vs GET
+- Read about ref and populate 
+- Create GET /user/requests/received with all checks
+
+Lec 14
+- logic for GET /feed API
+- explore the $nin, $and, $ne and other query operators
+- Paginations
+
+/feed?page=1&limit=10  => first 10 users 1-10
+/feed?page=2&limit=10 =>11-20
+/feed?page=3&limit10
+
+mongodb -> important function(.skip(), .limit())
