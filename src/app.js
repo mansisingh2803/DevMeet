@@ -5,10 +5,9 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 //This will convert the data to JS object worked as a middleware
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials:true,
-}
-));
+  origin: true,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
 const authRouter = require("./routes/authRouter");
@@ -17,10 +16,10 @@ const requestRouter = require("./routes/requests");
 const userRouter = require('./routes/user');
 
 
-app.use("/api", authRouter);
-app.use("/api", profileRouter);
-app.use("/api", requestRouter);
-app.use("/api", userRouter);
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
 
 
 //proper way to connecting the database 
