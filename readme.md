@@ -1,81 +1,168 @@
-- JS Object vs JSON
-- Add the express.json() middleware to your app
-- Make your signup API dynamic to recieve data from the end user
-- Make the user api for fetching the data based on any id
-- Difference between Patch and Put
-- API - Update a user
-- Explore the Mongoose Documentation for model methods
-- What are the options in a Model.findOneAndUpdate method, explore more about it
-- API - Update the user with email Id
+# Codemate Backend 🚀
 
--Explore schematype options from the documentations
--add required, unique, lowercase, min, minlength, trim
-- Add default
-- Create a custom validate function for gender
-- Improve the DB schema - Put all appropriate validation on each field in schema
-- Add timestamps to the userschema
-- Add API level validation on patch request & signuppost api
-- Data santizing - Add API validation for each build
-- Install validator
-- Explore validator library function and use validator function for password, email.
+## 📌 Overview
+Codemate is a **MERN stack** web application designed to help developers **connect and collaborate**, similar to Tinder but specifically for developers. Users can create profiles, explore other developers, send connection requests, and manage their matches.
 
-- Never trust on req.body
-- validate data in signUp API
-- Install bcrypt package
-- Create PasswordHash using bcrypt.hash and save the user is exrupted password
-- Create login API
-- compare passwords and throw errors if email or password is invalid
+This repository contains the **backend** of Codemate, built with **Node.js, Express, and MongoDB**, following a **microservices architecture** for scalability.
 
-Lec 10 
-- install cookie-parser
-- just send a dummy cookie to user
-- create get/profile api and check if you get the cookie back
-- Install jsonwebtoken
-- In login api, after email and password validation, create a jwt token and send it to the user in cookie
-- read the cookies inside your profile API and find the logged in user
-- userAuth middleware
-- Add the userAuth middleware in profile API and a new senConnectionRequest API
-- Set the expiry of JWT token and cookies to 7 days
-- Create userSchema method to getJWT()
-- Create userSchema method to comparepassword(password)
+> ⚠️ **Note:** The backend is **fully functional** and ready for further scaling and optimizations.
 
-Lec 11
-- Explore tinder APIs
-- Create a list of all API you can think of in Dev Tinder
-- Group multiple routes under respective routers
-- Read documentation for express.Router
-- Create routes folder for managing auth, profile, request, connection
-- Create authRouter, profileRouter, requestRouter
-- Import these routers in app.js
-- Create POST/logout API
-- Create PATCH/profile.edit
-- Create PATCH/profile/password API ==> forgot password API
-- Make you validate all data in every POST, PATCH APIs
+---
 
-Lec 12
-- store the connectionrequest in database
-- Create a connectionrequestschema
-- send connection request api
-- proper validation of data
-- think of all corner cases
-- $or query read about it
-- read more about indexes in MongoDb
-- Why do we need index in DB?
-- What is the advantage and disadvantages of creating indexes?
 
-Lec 13
-- Write code with proper alidation for POST /request/review/:status/requestId
-- Thought process - POST vs GET
-- Read about ref and populate 
-- Create GET /user/requests/received with all checks
 
-Lec 14
-- logic for GET /feed API
-- explore the $nin, $and, $ne and other query operators
-- Paginations
+## 🛠️ Tech Stack
+- **Backend Framework**: [Node.js](https://nodejs.org/en) + [Express.js](https://expressjs.com/)
+- **Database**: [MongoDB](https://www.mongodb.com/) + [Mongoose](https://mongoosejs.com/)
+- **Authentication**: [JWT (JSON Web Tokens)](https://jwt.io/) + Cookies
+- **Encryption**: [bcryptjs](https://www.npmjs.com/package/bcryptjs) for password hashing
+- **API Testing**: Postman
+- **Environment Variables Management**: dotenv
+- **Package Manager**: npm
 
-/feed?page=1&limit=10  => first 10 users 1-10
-/feed?page=2&limit=10 =>11-20
-/feed?page=3&limit10
+---
 
-mongodb -> important function(.skip(), .limit())
+## 🔑 Features Implemented
+
+### **1. Authentication System**
+✅ User Signup, Login, and Logout  
+✅ JWT-based authentication with secure cookies  
+✅ Password encryption using **bcryptjs**  
+✅ Authentication middleware to protect routes  
+
+### **2. User Profile Management**
+✅ View user profile  
+✅ Edit profile details (restricted fields for security)  
+✅ Update password with validation  
+
+### **3. Connection Request System**
+✅ Send connection requests (`Interested` or `Ignored`)  
+✅ Accept or reject received requests  
+✅ Prevent duplicate requests using MongoDB validation  
+✅ Prevent self-requests using Mongoose `.pre` middleware  
+
+### **4. Feed API & Pagination**
+✅ Fetch suggested developers while excluding:  
+   - Logged-in user  
+   - Existing connections  
+   - Ignored users  
+   - Users with pending requests  
+✅ Implemented **pagination** using `skip` & `limit`  
+✅ Optimized query using **MongoDB $nin and $ne operators**  
+
+### **5. Database Design**
+✅ **User Schema**:
+   - Sanitized input fields (`trim`, `lowercase`, validation)
+   - Unique constraints on email and username  
+
+✅ **ConnectionRequest Schema**:
+   - `fromUserId`, `toUserId`, `status` with **enum validation**
+   - Indexed fields for optimized queries  
+   - Prevents multiple requests between the same users  
+
+### **6. Advanced Query Optimization**
+✅ **Indexes & Compound Indexes**:
+   - Used `index: true` for faster queries  
+   - Implemented compound indexes to optimize search  
+
+### **7. Middleware Implementation**
+✅ **Authentication Middleware**: Protects private routes  
+✅ **Error Handling Middleware**: Centralized error response  
+✅ **Mongoose `.pre` Middleware**: Prevents self-requests  
+
+### **8. Express Router Structure**
+✅ Modular route organization for maintainability  
+✅ APIs structured into separate routers (`auth`, `profile`, `connections`, `users`)  
+
+---
+
+## 🚀 API Endpoints
+
+### **1️⃣ Authentication Routes**
+| Method | Endpoint      | Description          | Auth Required |
+|--------|--------------|----------------------|--------------|
+| POST   | `/signup` | Register a new user | ❌ |
+| POST   | `/login` | Authenticate user & issue JWT | ❌ |
+| POST   | `/logout` | Logout user by clearing JWT cookie | ✅ |
+
+---
+
+### **2️⃣ User Profile Routes**
+| Method | Endpoint           | Description              | Auth Required |
+|--------|-------------------|------------------------|--------------|
+| GET    | `/profile/view`   | Get logged-in user profile | ✅ |
+| PATCH  | `/profile/edit`   | Update allowed profile fields | ✅ |
+| PATCH  | `/profile/password` | Update user password | ✅ |
+
+---
+
+### **3️⃣ Connection Request Routes**
+| Method | Endpoint                                    | Description                 | Auth Required |
+|--------|--------------------------------------------|-----------------------------|--------------|
+| POST   | `/request/send/:status/:toUserId`         | Send a connection request (Interested/Ignored) | ✅ |
+| POST   | `/request/review/:status/:requestId`      | Accept/Reject a request | ✅ |
+| GET    | `/user/requests/received`                 | Fetch pending connection requests | ✅ |
+| GET    | `/user/connections`                       | Fetch accepted connections | ✅ |
+
+---
+
+### **4️⃣ Feed API & Pagination**
+| Method | Endpoint      | Description                              | Auth Required |
+|--------|--------------|----------------------------------------|--------------|
+| GET    | `/feed?page=1&limit=10` | Get suggested developer profiles with pagination | ✅ |
+
+---
+
+## 🏗️ Setup & Running the Server
+
+### **1️⃣ Clone the Repository**
+```bash
+git clone https://github.com/akshadjaiswal/devTinder-backend.git
+cd devTinder-backend
+```
+
+### **2️⃣ Set Up Environment Variables**
+Create a `.env` file and add:
+```ini
+DATABASE_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/devTinder
+JWT_SECRET=your_jwt_secret
+PORT=3000
+```
+
+### **3️⃣ Start the Backend Server**
+```bash
+npm start
+```
+Server runs at: `http://localhost:3000/`
+
+---
+
+## 🔗 Frontend Integration
+The frontend for DevTinder is available at:
+🔗 **[DevTinder Frontend Repository](https://github.com/akshadjaiswal/devTinder-frontend)**
+
+Make sure the backend is running before accessing the frontend.
+
+---
+
+## 📢 Contribution Guidelines
+Since the project is now fully functional, improvements are still welcome!
+✅ Feel free to open issues for bugs or feature requests.  
+✅ Fork the repository and submit a pull request.  
+
+---
+
+# Sending Emails via SES
+- Create IAM User
+- Give Access to AmazonSESFULLACCESS
+- Amazon SES: Create an Identity
+- Verify your domain name
+- Verify an email address
+- Install AWS SDK -v3
+- Setup SesClient
+- Access Credentials should be created in IAM under security credentials Tab
+- Write code for SesClient
+- write code for sending email address
+- make the amail dynamic by passing more params to the run function
+
+
